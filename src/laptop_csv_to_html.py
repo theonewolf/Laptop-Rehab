@@ -32,6 +32,7 @@
 
 
 # Imports
+from collections import OrderedDict
 from csv import reader as csvreader
 from jinja2 import Template
 from sys import argv
@@ -41,6 +42,7 @@ from sys import argv
 # Globals
 HELP = '''Usage: %s <TEMPLATE> <CSV File(s) ...>'''
 OUTFNAME_TEMPLATE = '''%d.html'''
+EMAIL = 'laptop-rehab@lists.andrew.cmu.edu'
 
 
 
@@ -70,6 +72,21 @@ if __name__ == '__main__':
 
                 for row in csvdata:
                     if not keys: keys = row; continue
+
+                    stats = OrderedDict(zip(keys,row))
+                    laptop_name = '%s %s' % (stats['Manufacturer'],
+                                             stats['Model #'])
+                    OS = row[keys.index('Installed OS')] 
+                    username,password = stats['Username-Password'].split('-')
+
+                    del stats['Notes']
+                    del stats['Username-Password']
+
                     with open(OUTFNAME_TEMPLATE % (counter), 'wb') as out:
-                        out.write(template.render(stats=zip(keys,row)))
+                        out.write(template.render(laptop_name=laptop_name,
+                                                  OS=OS,
+                                                  email=EMAIL,
+                                                  username=username,
+                                                  password=password,
+                                                  stats=stats))
                         counter += 1

@@ -31,11 +31,39 @@
     <head>
         <title>Welcome to Your New Laptop!</title>
     </head>
-    <body>
-        <h1>Welcome to Your New Laptop!</h1>
-        <ul>
+    <body style="width: 800px; margin: auto; text-align: justify;">
+
+        <h1 style="text-align: center;">Laptop Rehab Project: Enjoy Your
+                                        {{ laptop_name }}</h1>
+        <hr />
+
+        <p>Welcome to your new laptop from the Laptop Rehab Project based at
+           Carnegie Mellon University (Pittsburgh, PA, USA).  It has been
+           rehabilitated and pre-loaded with
+           <strong>{{ OS }}</strong> containing lots of
+           <strong>educational software and games.</strong></p>
+
+        <p>It might not be perfect, but this datasheet will tell you everything
+           we know about your rehabilitated laptop.  Some parts might not be
+           working, which we document below.  If you need help with your
+           laptop, fearless volunteers can be contacted by email: 
+           <a href="mailto:{{ email }}">{{ email }}</a>.
+           Every laptop we ship can at least boot, hold charge for 30 minutes,
+           and connect to WiFi.</p>
+        <hr />
+
+        <p>Log into your laptop with the following username and password.</p>
+            <ul style="list-style-type: none; font-size: 1.2em;">
+                <li><strong>Username: </strong>{{ username }}</li>
+                <li><strong>Password: </strong>{{ password }}</li>
+            </ul>
+        <hr />
+
+        <ul style="list-style-type: none;">
             {% for stat in stats %}
-                <li><strong>{{ stat[0] }}:</strong> {{ stat[1] }}</li>
+                {% if stats[stat] %}
+                    <li><strong>{{ stat }}:</strong> {{ stats[stat] }}</li>
+                {% endif %}
             {% endfor %}
         </ul>
     </body>
