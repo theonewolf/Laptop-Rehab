@@ -47,18 +47,19 @@
            we know about your rehabilitated laptop.  Some parts might not be
            working, which we document below.  If you need help with your
            laptop, fearless volunteers can be contacted by email: 
-           <a href="mailto:{{ email }}">{{ email }}</a>.
+           <a href="mailto:{{ email }}" style="color: #000;">{{ email }}</a>.
            Every laptop we ship can at least boot, hold charge for 30 minutes,
            and connect to WiFi.</p>
         <hr />
 
-        <p>Log into your laptop with the following username and password.</p>
+        <h3>Login Details</h3>
             <ul style="list-style-type: none; font-size: 1.2em;">
                 <li><strong>Username: </strong>{{ username }}</li>
                 <li><strong>Password: </strong>{{ password }}</li>
             </ul>
         <hr />
 
+        <h3>Laptop Stats</h3>
         <ul style="list-style-type: none;">
             {% for stat in stats %}
                 {% if stats[stat] %}
@@ -66,5 +67,21 @@
                 {% endif %}
             {% endfor %}
         </ul>
+        <hr />
+
+        <h3>More Information</h3>
+        <ul style="list-style-type: none;">
+            <li><strong>Installed Apps:</strong><a href="http://goo.gl/C0qvPd"
+                                                   style="color: #000;">
+                                                  http://goo.gl/C0qvPd</a></li>
+            <li><strong>Ubuntu Manual:</strong><a href="http://goo.gl/FNxcHO"
+                                                  style="color: #000;">
+                                                  http://goo.gl/FNxcHO</a></li>
+        </ul>
+
+        <footer style="text-align: center;">
+        <small>Laptop rehabilitated and shipped by the Laptop Rehab Project @
+               CMU (2013)</small>
+        <footer>
     </body>
 </html>
