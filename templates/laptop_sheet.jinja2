@@ -61,10 +61,7 @@
 
         <h3>Laptop Stats</h3>
         <ul style="list-style-type: none;">
-            {% for stat in stats %}
-                {% if stats[stat] %}
-                    <li><strong>{{ stat }}:</strong> {{ stats[stat] }}</li>
-                {% endif %}
+            {% for stat in stats %}{% if stats[stat] %}<li><strong>{{ stat }}:</strong> {{ stats[stat] }}</li>{% endif %}
             {% endfor %}
         </ul>
         <hr />
