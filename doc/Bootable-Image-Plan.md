@@ -22,7 +22,8 @@ This is acceptable, and only marginally larger than the Ubuntu install ISO!
 Idea for Ubuntu installation:
 
 ```
-    blkid -L "CMU Laptop Rehab 64-bit" # provides mountable location of USB fs
+    blkid -L "CMU Laptop Rehab 64-bit" # provides partition USB fs
+    blkid -L "CMU Laptop Rehab 64-bit" | grep sd[^0-9]* -o # provides device
 ```
 
 after mounting the `blkid` result, we unpack the compressed Ubuntu disk image
