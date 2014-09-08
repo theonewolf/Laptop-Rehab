@@ -56,3 +56,27 @@ blocks to improve compression with a tool like `fstrim`.  Second, we should
 deduplicate all the blocks (but this needs a new tool to be developed for both
 packing and unpacking).  Third, we need very good compression, with very fast
 decompression.
+
+### Resizing Partition
+
+There is only one partition we care about resizing, and that is the root
+partition.  We pre-setup the image so that it is the last partition and
+therefore easy to expand to the end of whatever drive we end up on.
+
+This `sfdisk` command line should only modify the last partition:
+
+```
+    sfdisk -N4 /dev/sda << EOF
+        ,+
+        EOF
+```
+
+We only really need to change the partition number.  The default for `sfdisk`
+is to keep old values, so we use `+` for the size to use maximum size.
+
+After running that, we then need to use `resize2fs` to make the file system
+actually use that space:
+
+```
+    resize2fs /dev/sda4
+```
