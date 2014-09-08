@@ -80,6 +80,8 @@ int main(int argc, char* argv[])
     snprintf(buf, 1024, "-- Found device: %s -- \n", devname);
     printstr(verbose, buf);
 
+    printstr(true, devname);
+
     return EXIT_SUCCESS;
 
 error:
