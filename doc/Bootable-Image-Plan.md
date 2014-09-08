@@ -47,3 +47,11 @@ Here we exclude memory, fd, and ROM devices.  We might want to add more to our
 exclusion list in the future.  We also exclude the USB device (sdb in the
 example) via `grep`.  This can be programmatically found via the aforementioned
 `blkid` command.
+
+### Minimizing Ubuntu Install Disk Size
+
+There are several usable techniques here.  First, we should zero all unused 
+blocks to improve compression with a tool like `fstrim`.  Second, we should
+deduplicate all the blocks (but this needs a new tool to be developed for both
+packing and unpacking).  Third, we need very good compression, with very fast
+decompression.
