@@ -32,3 +32,18 @@ The idea here is that we want to unpack onto the first hard drive in the
 system.
 
 Then we resize the root partition via fdisk to takeover the entire disk.
+
+### Finding First HDD
+
+We assume there is only one main HDD in the system that the user will want to
+install an OS onto.  If we have `lsblk` available for us in the TinyCore world,
+we can search for such a device with just a bit of bash:
+
+```
+    lsblk -o NAME -e 1,2,11 -b -n -d | grep -v sdb | head -n 1
+```
+
+Here we exclude memory, fd, and ROM devices.  We might want to add more to our
+exclusion list in the future.  We also exclude the USB device (sdb in the
+example) via `grep`.  This can be programmatically found via the aforementioned
+`blkid` command.
