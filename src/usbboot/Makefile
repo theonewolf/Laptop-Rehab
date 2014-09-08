@@ -38,7 +38,14 @@ tools:
 		-o probe \
 		-Wall -Werror
 
-default:
+core.gz:
+	cd core-unpacked && \
+		sudo find | sudo cpio -o -H newc | gzip -2 > ../core.gz && \
+		cd .. && \
+		advdef -z4 core.gz && \
+		sudo mv core.gz core-mount/boot/
+
+lr-tiny-amd64.iso: core.gz
 	rsync -avxz core-mount/ /tmp/core-mount/
 	sudo mkisofs -r -V "CMU Laptop Rehab 64-bit" \
 		-cache-inodes \
