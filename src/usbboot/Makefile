@@ -1,20 +1,29 @@
-TARGET=lr-amd64.iso
-BUILD_DIR=/tmp/lr64-distribution/
+TARGET=lr-tiny-amd64.iso
+BUILD_DIR=/tmp/core-mount/
+
+tools:
+	gcc probe-blockdev.c \
+		-static \
+		-lblkid \
+		-luuid \
+		-o probe \
+		-Wall -Werror
 
 default:
-	rsync -avxz lr64-distribution/ /tmp/lr64-distribution/
+	rsync -avxz core-mount/ /tmp/core-mount/
 	sudo mkisofs -r -V "CMU Laptop Rehab 64-bit" \
 		-cache-inodes \
-		-J -l -b isolinux/isolinux.bin \
-		-c isolinux/boot.cat -no-emul-boot \
+		-J -l -b boot/isolinux/isolinux.bin \
+		-c boot/isolinux/boot.cat -no-emul-boot \
 		-boot-load-size 4 -boot-info-table \
 		-o ${TARGET} ${BUILD_DIR}
 	sudo isohybrid ${TARGET}
 
-test:
+test: default
 	truncate hdd.raw --size 8G
 	kvm \
 		-usbdevice disk:${TARGET} \
 		-drive file=hdd.raw \
 		-boot menu=on \
-		-m 2G
+		-m 2G \
+		-cpu host
