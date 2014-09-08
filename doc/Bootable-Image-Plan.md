@@ -34,6 +34,24 @@ system.
 
 Then we resize the root partition via fdisk to takeover the entire disk.
 
+### TinyCore Customizations
+
+TinyCore doesn't come with a lot of tools that we'd want, but we can easily
+extend it during the remastering step.  While remastering, we should mix-in:
+
+```
+    e2fsprogs.tcz 
+    ncurses-common.tcz 
+    ncurses.tcz 
+    udev-lib.tcz 
+    util-linux.tcz
+```
+
+Which will give us tools to use for the rest of the installation procedure.
+
+These extensions can be mixed in by using `unsquashfs` to unpack them, and then
+`rsync` them into the TinyCore root file system.
+
 ### Finding First HDD
 
 We assume there is only one main HDD in the system that the user will want to
