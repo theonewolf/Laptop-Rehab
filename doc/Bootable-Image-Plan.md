@@ -98,3 +98,9 @@ actually use that space:
 ```
     resize2fs /dev/sda4
 ```
+
+### Bootable Script for Tinycore
+
+Currently executing from `init -> rcS -> tc-config -> bootsync.sh`.
+
+Unresolved issue: Why isn't the `fstab` file properly created in time?

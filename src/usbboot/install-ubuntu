@@ -1,0 +1,61 @@
+#!/bin/busybox ash
+# RC Script to Install Ubuntu for Laptop Rehab Project
+
+. /etc/init.d/tc-functions
+
+export PATH=/usr/local/sbin:/usr/local/bin:"$PATH"
+
+usbmount() {
+    USBDEVICE="$(blkid -L 'CMU Laptop Rehab 32-bit' | grep sd[^0-9]* -o)"
+    USBPART="$(blkid -L 'CMU Laptop Rehab 32-bit')"
+    echo "${WHITE}Found USB partition at: ${BLUE}${USBPART}.${NORMAL}"
+    if [ ! -e /mnt/$(basename ${USBPART}) ]; then
+        mkdir -p /mnt/$(basename ${USBPART})
+    fi
+    mount "${USBPART}" /mnt/$(basename ${USBPART})
+
+    USBMOUNT="/mnt/$(basename ${USBPART})"
+    echo "${WHITE}USB partition should be mounted at: ${BLUE}${USBMOUNT}.${NORMAL}"
+}
+
+findhdd() {
+    HDD="$(lsblk -o NAME -e 1,2,11 -b -n -d | grep -v ${USBDEVICE} | head -n 1)"
+    echo "${WHITE}Target HDD: ${BLUE}/dev/${HDD}.${NORMAL}"
+}
+
+copyubuntu() {
+    echo "${WHITE}Decompressing OS image to HDD."
+    gunzip -c "${USBMOUNT}/Ubuntu32.img.gz" > "/dev/${HDD}"
+}
+
+resizepart() {
+    echo "${WHITE}Resizing partition.${NORMAL}"
+    echo ",+" | sfdisk --force -N2 "/dev/${HDD}"
+    echo ",+" | sfdisk --force -N5 "/dev/${HDD}"
+    echo "${WHITE}Resizing file system.${NORMAL}"
+    partx -u "/dev/${HDD}"
+    e2fsck -f "/dev/${HDD}5"
+    resize2fs "/dev/${HDD}5"
+}
+
+waitfstab() {
+    if [ -e /var/run/rebuildfstab.pid ]; then
+        wait "$(cat /var/run/rebuildfstab.pid)"
+    fi
+}
+
+waitfstab
+echo "${GREEN}Installing Ubuntu OS${NORMAL}"
+
+usbmount
+findhdd
+echo "${YELLOW}Please wait, this could take 10-15 minutes!${NORMAL}"
+copyubuntu
+read junk
+resizepart
+
+echo "${GREEN}Finished installing OS.${NORMAL}"
+
+echo "${RED}Press ANY KEY to REBOOT.${NORMAL}"
+read junk
+reboot
