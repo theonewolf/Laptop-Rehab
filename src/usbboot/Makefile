@@ -27,27 +27,19 @@
 #     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                  #
 #                                                                             #
 ###############################################################################
-TARGET=lr-tiny-amd64.iso
+TARGET=lr-tiny-i386.iso
 BUILD_DIR=/tmp/core-mount/
 
-tools:
-	gcc probe-blockdev.c \
-		-static \
-		-lblkid \
-		-luuid \
-		-o probe \
-		-Wall -Werror
-
-core.gz:
+core.gz: core-unpacked
 	cd core-unpacked && \
 		sudo find | sudo cpio -o -H newc | gzip -2 > ../core.gz && \
 		cd .. && \
 		advdef -z4 core.gz && \
 		sudo mv core.gz core-mount/boot/
 
-lr-tiny-amd64.iso: core.gz
+lr-tiny-i386.iso: core.gz
 	rsync -avxz core-mount/ /tmp/core-mount/
-	sudo mkisofs -r -V "CMU Laptop Rehab 64-bit" \
+	sudo mkisofs -r -V "CMU Laptop Rehab 32-bit" \
 		-cache-inodes \
 		-J -l -b boot/isolinux/isolinux.bin \
 		-c boot/isolinux/boot.cat -no-emul-boot \
@@ -55,7 +47,8 @@ lr-tiny-amd64.iso: core.gz
 		-o ${TARGET} ${BUILD_DIR}
 	sudo isohybrid ${TARGET}
 
-test: default
+test:
+	truncate hdd.raw --size 0G
 	truncate hdd.raw --size 8G
 	kvm \
 		-usbdevice disk:${TARGET} \
