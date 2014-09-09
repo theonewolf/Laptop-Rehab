@@ -1,5 +1,33 @@
 #!/bin/busybox ash
-# RC Script to Install Ubuntu for Laptop Rehab Project
+###############################################################################
+# install-ubuntu                                                              #
+#                                                                             #
+# RC Script to Install Ubuntu for Laptop Rehab Project                        #
+#                                                                             #
+#                                                                             #
+#   Authors: Wolfgang Richter <wolf@cs.cmu.edu>                               #
+#                                                                             #
+#   Copyright 2014 Laptop Rehab Project                                       #
+#                                                                             #
+# Permission is hereby granted, free of charge, to any person obtaining a     #
+# copy of this software and associated documentation files (the "Software"),  #
+# to deal in the Software without restriction, including without limitation   #
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,    #
+# and/or sell copies of the Software, and to permit persons to whom the       #
+# Software is furnished to do so, subject to the following conditions:        #
+#                                                                             #
+#     The above copyright notice and this permission notice shall be included #
+#     in all copies or substantial portions of the Software.                  #
+#                                                                             #
+#     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS #
+#     OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF              #
+#     MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  #
+#     IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY    #
+#     CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,    #
+#     TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE       #
+#     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                  #
+#                                                                             #
+###############################################################################
 
 . /etc/init.d/tc-functions
 
@@ -26,6 +54,7 @@ findhdd() {
 copyubuntu() {
     echo "${WHITE}Decompressing OS image to HDD."
     gunzip -c "${USBMOUNT}/Ubuntu32.img.gz" > "/dev/${HDD}"
+    sync
 }
 
 resizepart() {
@@ -33,9 +62,12 @@ resizepart() {
     echo ",+" | sfdisk --force -N2 "/dev/${HDD}"
     echo ",+" | sfdisk --force -N5 "/dev/${HDD}"
     echo "${WHITE}Resizing file system.${NORMAL}"
+    sync
     partx -u "/dev/${HDD}"
     e2fsck -f "/dev/${HDD}5"
+    sync
     resize2fs "/dev/${HDD}5"
+    sync
 }
 
 waitfstab() {
