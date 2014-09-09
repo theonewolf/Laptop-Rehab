@@ -57,6 +57,11 @@ copyubuntu() {
     sync
 }
 
+fixswap() {
+    echo "${WHITE}Creating swap space.${NORMAL}"
+    mkswap "/dev/${HDD}1"
+}
+
 resizepart() {
     echo "${WHITE}Resizing partition.${NORMAL}"
     echo ",+" | sfdisk --force -N2 "/dev/${HDD}"
@@ -85,6 +90,7 @@ echo "${YELLOW}Please wait, this could take 10-15 minutes!${NORMAL}"
 copyubuntu
 read junk
 resizepart
+fixswap
 
 echo "${GREEN}Finished installing OS.${NORMAL}"
 
