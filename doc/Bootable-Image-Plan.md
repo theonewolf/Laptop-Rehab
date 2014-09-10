@@ -104,3 +104,15 @@ actually use that space:
 Currently executing from `init -> rcS -> tc-config -> bootsync.sh`.
 
 Unresolved issue: Why isn't the `fstab` file properly created in time?
+
+### Using `pv`
+
+It's unsettling watching the unpacking with 0 status or feedback.  To remedy
+this I've produced a static build of `pv` and included it in our TinyCore
+install.
+
+The command we are most likely to use is:
+
+```
+    gunzip /mnt/sdb1/Ubuntu32.img.gz | pv -s 6.5g -p -t -eta -r -B 512k > /dev/sda
+```
