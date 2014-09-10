@@ -37,7 +37,7 @@ core.gz: core-unpacked
 		advdef -z4 core.gz && \
 		sudo mv core.gz core-mount/boot/
 
-lr-tiny-i386.iso: core.gz
+lr-tiny-i386.iso: core.gz core-mount core-unpacked
 	rsync -avxz core-mount/ /tmp/core-mount/
 	sudo mkisofs -r -V "CMU Laptop Rehab 32-bit" \
 		-cache-inodes \
@@ -50,6 +50,16 @@ lr-tiny-i386.iso: core.gz
 test:
 	truncate hdd.raw --size 0G
 	truncate hdd.raw --size 8G
+
+testcdrom: test lr-tiny-i386.iso
+	kvm \
+		-drive file=${TARGET},if=ide,media=cdrom \
+		-drive file=hdd.raw \
+		-boot menu=on \
+		-m 2G \
+		-cpu host
+
+testusb: test lr-tiny-i386.iso
 	kvm \
 		-usbdevice disk:${TARGET} \
 		-drive file=hdd.raw \
