@@ -53,9 +53,7 @@ findhdd() {
 
 copyubuntu() {
     echo "${WHITE}Decompressing OS image to HDD."
-    gunzip -c "${USBMOUNT}/Ubuntu32.img.gz" | \
-        pv -s 6656m -p -t -e -r -B 512k \ 
-        > "/dev/${HDD}"
+    gunzip -c "${USBMOUNT}/Ubuntu32.img.gz" | pv -s 6656m -p -t -e -r -B 512k > "/dev/${HDD}"
     sync
 }
 
