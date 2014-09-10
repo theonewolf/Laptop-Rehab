@@ -89,10 +89,10 @@ findhdd
 echo "${YELLOW}Please wait, this could take 10-15 minutes!${NORMAL}"
 copyubuntu
 resizepart
-fixswap
+#fixswap
 
 echo "${GREEN}Finished installing OS.${NORMAL}"
 
-echo "${RED}Press ANY KEY to REBOOT.${NORMAL}"
+echo "${RED}Press ANY KEY to SHUTDOWN.${NORMAL}"
 read junk
-reboot
+poweroff
