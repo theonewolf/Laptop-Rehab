@@ -64,8 +64,8 @@ fixswap() {
 
 resizepart() {
     echo "${WHITE}Resizing partition.${NORMAL}"
-    echo ",+" | sfdisk --force -N2 "/dev/${HDD}"
-    echo ",+" | sfdisk --force -N5 "/dev/${HDD}"
+    parted -s "/dev/${HDD}" resizepart 2 100%
+    parted -s "/dev/${HDD}" resizepart 5 100%
     echo "${WHITE}Resizing file system.${NORMAL}"
     sync
     partx -u "/dev/${HDD}"
