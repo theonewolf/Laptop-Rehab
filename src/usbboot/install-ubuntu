@@ -88,7 +88,6 @@ usbmount
 findhdd
 echo "${YELLOW}Please wait, this could take 10-15 minutes!${NORMAL}"
 copyubuntu
-read junk
 resizepart
 fixswap
 
