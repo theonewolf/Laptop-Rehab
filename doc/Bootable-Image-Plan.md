@@ -116,3 +116,22 @@ The command we are most likely to use is:
 ```
     gunzip /mnt/sdb1/Ubuntu32.img.gz | pv -s 6.5g -p -t -eta -r -B 512k > /dev/sda
 ```
+
+### Abort `sfdisk`, Hello `parted`
+
+`sfdisk` didn't seem to properly resize partitions (it was changing their start
+positions?).  Maybe we could hack out a better command, or swap to the easier
+to use `parted`:
+
+```
+    parted -s /dev/sda resizepart 2 100%
+    parted -s /dev/sda resizepart 5 100%
+```
+
+Which is much easier to work with.  Except TinyCore's `parted` currently is
+version 3.1 which doesn't have support for `resizepart` (removed as of 2.4).
+
+We have statically compiled a 32-bit binary of version 3.2 `parted` and include
+that in the image.
+
+All problems solved!
