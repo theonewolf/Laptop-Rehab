@@ -59,10 +59,12 @@ testret() {
         error "$2"
     fi
 }
+
 usbmount() {
-    USBDEVICE="$(blkid -L 'CMU Laptop Rehab 32-bit' | grep sd[^0-9]* -o)"
+    USBDEVICE="$(blkid -L 'CMU Laptop Rehab 32-bit' | grep 's[d|r][^0-9]*' -o)"
     USBPART="$(blkid -L 'CMU Laptop Rehab 32-bit')"
     echo "${WHITE}Found USB partition at: ${BLUE}${USBPART}.${NORMAL}"
+
     if [ ! -e /mnt/$(basename ${USBPART}) ]; then
         mkdir -p /mnt/$(basename ${USBPART})
         testret $? "${ERROR_MKDIR}"
