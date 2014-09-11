@@ -66,3 +66,11 @@ testusb: test lr-tiny-i386.iso
 		-boot menu=on \
 		-m 2G \
 		-cpu host
+
+testrealusb: test lr-tiny-i386.iso
+	kvm \
+		-usbdevice disk:/dev/sdb \
+		-drive file=hdd.raw \
+		-boot menu=on \
+		-m 2G \
+		-cpu host
