@@ -27,7 +27,7 @@
 #     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                  #
 #                                                                             #
 ###############################################################################
-TARGET=lr-tiny-i386.iso
+TARGET=LaptopRehabInstaller-2014.iso
 BUILD_DIR=/tmp/core-mount/
 
 core.gz: core-unpacked
@@ -37,7 +37,7 @@ core.gz: core-unpacked
 		advdef -z4 core.gz && \
 		sudo mv core.gz core-mount/boot/
 
-lr-tiny-i386.iso: core.gz core-mount core-unpacked
+LaptopRehabInstaller-2014.iso: core.gz core-mount core-unpacked
 	rsync -avxz core-mount/ /tmp/core-mount/
 	sudo mkisofs -r -V "CMU Laptop Rehab 32-bit" \
 		-cache-inodes \
@@ -51,7 +51,7 @@ test:
 	truncate hdd.raw --size 0G
 	truncate hdd.raw --size 8G
 
-testcdrom: test lr-tiny-i386.iso
+testcdrom: test ${TARGET}
 	kvm \
 		-drive file=${TARGET},if=ide,media=cdrom \
 		-drive file=hdd.raw \
@@ -59,7 +59,7 @@ testcdrom: test lr-tiny-i386.iso
 		-m 2G \
 		-cpu host
 
-testusb: test lr-tiny-i386.iso
+testusb: test ${TARGET}
 	kvm \
 		-usbdevice disk:${TARGET} \
 		-drive file=hdd.raw \

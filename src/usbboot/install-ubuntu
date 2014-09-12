@@ -60,6 +60,15 @@ testret() {
     fi
 }
 
+parseopt() {
+    for i in `cat /proc/cmdline`; do
+        case $i in
+            installimage=*) DISKIMG=${i#*=} ;;
+            rescuemode*) exit 0 ;;
+        esac
+    done
+}
+
 usbmount() {
     USBDEVICE="$(blkid -L 'CMU Laptop Rehab 32-bit' | grep 's[d|r][^0-9]*' -o)"
     USBPART="$(blkid -L 'CMU Laptop Rehab 32-bit')"
@@ -83,9 +92,9 @@ findhdd() {
 }
 
 copyubuntu() {
-    echo "${WHITE}Decompressing OS image to HDD."
+    echo "${WHITE}Decompressing OS image ${BLUE}${DISKIMG}${WHITE} to HDD."
 
-    gunzip -c "${USBMOUNT}/Ubuntu32.img.gz" | pv -s 6656m -p -t -e -r -B 512k > "/dev/${HDD}"
+    xz -d -c "${USBMOUNT}/${DISKIMG}" | pv -s 6656m -p -t -e -r -B 512k > "/dev/${HDD}"
     testret $? "${ERROR_DECOMPRESS}"
 
     sync
@@ -135,6 +144,7 @@ waitfstab() {
 }
 
 waitfstab
+parseopt
 echo "${GREEN}Installing Ubuntu OS${NORMAL}"
 
 usbmount
