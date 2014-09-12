@@ -135,3 +135,33 @@ We have statically compiled a 32-bit binary of version 3.2 `parted` and include
 that in the image.
 
 All problems solved!
+
+### Checking HDD Health
+
+We now include a quick check on SMART health of the HDD we are going to use.
+
+It goes like this (masking for the bits we want via 220):
+
+```
+    smartctl -H /dev/sda
+    smartstat=$(($? & 220))
+```
+
+And if `smartstat` is greater than zero, we now some the drive has health
+issues.
+
+
+### Merging 32-bit and 64-bit Into one ISO Installer
+
+We feel that the 32-bit and 64-bit disk images should have a lot of data
+duplication between them.  Thus, with deduplication along with aggressive
+compression we should be able to fit *both* disk images into one unified
+installer.
+
+So far `xz -9` has provided the best compression (technically `9e`, but it
+takes a lot longer).  It has very slow compression, and slow decompression.
+But, even on ancient 32-bit test system the decompression finished within 10
+minutes.
+
+Currently investigating `zpaq` as it explicitly does deduplication along with
+compression---potentially more than what `xz` offers.
