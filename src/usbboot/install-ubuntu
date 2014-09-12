@@ -91,7 +91,7 @@ usbmount() {
     fi
 
     mount "${USBPART}" /mnt/$(basename ${USBPART})
-    testret $? '"${ERROR_MOUNT}"'
+    testret $? "${ERROR_MOUNT}"
 
     USBMOUNT="/mnt/$(basename ${USBPART})"
     echo "${WHITE}Root partition should be mounted at: ${BLUE}${USBMOUNT}${WHITE}.${NORMAL}"
