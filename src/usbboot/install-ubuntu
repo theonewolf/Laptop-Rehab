@@ -49,7 +49,7 @@ error() {
     message="$1"
     echo "${RED}Error: ${message}${NORMAL}"
     echo "${RED}Press any key to continue to a debug shell.${NORMAL}"
-    echo "${RED}If you do not know what to do when the shell appears, just type '${BLUE}poweroff${NORMAL}' and hit '${WHITE}Enter${NORMAL}'.${NORMAL}"
+    echo "${RED}If you do not know what to do when the shell appears, just type '${BLUE}poweroff${RED}' and hit '${WHITE}Enter${RED}'.${NORMAL}"
     read junk
     exit 1
 }
