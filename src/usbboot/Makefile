@@ -67,9 +67,17 @@ testusb: test ${TARGET}
 		-m 2G \
 		-cpu host
 
-testrealusb: test lr-tiny-i386.iso
-	kvm \
+testrealusb: test
+	sudo kvm \
 		-usbdevice disk:/dev/sdb \
+		-drive file=hdd.raw \
+		-boot menu=on \
+		-m 2G \
+		-cpu host
+
+testrealcdrom: test
+	sudo kvm \
+		-drive file=/dev/sdb,if=ide,media=cdrom \
 		-drive file=hdd.raw \
 		-boot menu=on \
 		-m 2G \
