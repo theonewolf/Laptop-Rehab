@@ -48,8 +48,8 @@ ERROR_RESIZE="Failed file system resize."
 error() {
     message="$1"
     echo "${RED}Error: ${message}${NORMAL}"
-    echo "${RED}Press any key to continue to a debug shell.${NORMAL}"
-    echo "${RED}If you do not know what to do when the shell appears, just type '${BLUE}poweroff${RED}' and hit '${WHITE}Enter${RED}'.${NORMAL}"
+    echo "${RED}Press ${BLUE}Enter${RED} to continue to a debug shell.${NORMAL}"
+    echo "${RED}If you do not know what to do when the shell appears, just type '${BLUE}sudo poweroff${RED}' and hit '${BLUE}Enter${RED}'.${NORMAL}"
     read junk
     exit 1
 }
@@ -72,7 +72,7 @@ parseopt() {
 usbmount() {
     USBDEVICE="$(blkid -L 'CMU Laptop Rehab 32-bit' | grep 's[d|r][^0-9]*' -o)"
     USBPART="$(blkid -L 'CMU Laptop Rehab 32-bit')"
-    echo "${WHITE}Found USB partition at: ${BLUE}${USBPART}.${NORMAL}"
+    echo "${WHITE}Found root partition at: ${BLUE}${USBPART}.${WHITE}${NORMAL}"
 
     if [ ! -e /mnt/$(basename ${USBPART}) ]; then
         mkdir -p /mnt/$(basename ${USBPART})
@@ -83,29 +83,23 @@ usbmount() {
     testret $? '"${ERROR_MOUNT}"'
 
     USBMOUNT="/mnt/$(basename ${USBPART})"
-    echo "${WHITE}USB partition should be mounted at: ${BLUE}${USBMOUNT}.${NORMAL}"
+    echo "${WHITE}Root partition should be mounted at: ${BLUE}${USBMOUNT}${WHITE}.${NORMAL}"
 }
 
 findhdd() {
     HDD="$(lsblk -o NAME -e 1,2,11 -b -n -d | grep -v ${USBDEVICE} | head -n 1)"
-    echo "${WHITE}Target HDD: ${BLUE}/dev/${HDD}.${NORMAL}"
+    echo "${WHITE}Target HDD: ${BLUE}/dev/${HDD}${WHITE}.${NORMAL}"
 }
 
 copyubuntu() {
     echo "${WHITE}Decompressing OS image ${BLUE}${DISKIMG}${WHITE} to HDD."
+    echo "${RED}Please wait, this could take 10-15 minutes!${NORMAL}"
 
     xz -d -c "${USBMOUNT}/${DISKIMG}" | pv -s 6656m -p -t -e -r -B 512k > "/dev/${HDD}"
     testret $? "${ERROR_DECOMPRESS}"
 
     sync
     testret $? "${ERROR_SYNC}"
-}
-
-fixswap() {
-    echo "${WHITE}Creating swap space.${NORMAL}"
-
-    mkswap "/dev/${HDD}1"
-    testret $? "${ERROR_MKSWAP}"
 }
 
 resizepart() {
@@ -145,14 +139,13 @@ waitfstab() {
 
 waitfstab
 parseopt
+clear
 echo "${GREEN}Installing Ubuntu OS${NORMAL}"
 
 usbmount
 findhdd
-echo "${YELLOW}Please wait, this could take 10-15 minutes!${NORMAL}"
 copyubuntu
 resizepart
-#fixswap
 
 echo "${GREEN}Finished installing OS.${NORMAL}"
 
