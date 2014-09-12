@@ -63,10 +63,21 @@ testret() {
 parseopt() {
     for i in `cat /proc/cmdline`; do
         case $i in
-            installimage=*) DISKIMG=${i#*=} ;;
             rescuemode*) exit 0 ;;
         esac
     done
+}
+
+testcpu() {
+    CPU64="$(grep -c 'flags.*\blm\b.*' /proc/cpuinfo)"    
+    
+    if [ $CPU64 -eq 1 ]; then
+        echo "${WHITE}Detected ${BLUE}64-bit CPU${WHITE}.${NORMAL}"
+        DISKIMG="Ubuntu64.img.xz"
+    else
+        echo "${WHITE}Detected ${BLUE}32-bit CPU${WHITE}.${NORMAL}"
+        DISKIMG="Ubuntu32.img.xz"
+    fi
 }
 
 usbmount() {
@@ -141,6 +152,7 @@ waitfstab
 parseopt
 clear
 echo "${GREEN}Installing Ubuntu OS${NORMAL}"
+testcpu
 
 usbmount
 findhdd
