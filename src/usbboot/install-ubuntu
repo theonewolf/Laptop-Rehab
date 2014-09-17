@@ -73,10 +73,10 @@ testcpu() {
     
     if [ $CPU64 -eq 1 ]; then
         echo "${WHITE}Detected ${BLUE}64-bit CPU${WHITE}.${NORMAL}"
-        DISKIMG="Ubuntu64.img.xz"
+        DISKIMG="Ubuntu64.img"
     else
         echo "${WHITE}Detected ${BLUE}32-bit CPU${WHITE}.${NORMAL}"
-        DISKIMG="Ubuntu32.img.xz"
+        DISKIMG="Ubuntu32.img"
     fi
 }
 
@@ -117,7 +117,7 @@ copyubuntu() {
     echo "${WHITE}Decompressing OS image ${BLUE}${DISKIMG}${WHITE} to HDD."
     echo "${RED}Please wait, this could take 10-15 minutes!${NORMAL}"
 
-    xz -d -c "${USBMOUNT}/${DISKIMG}" | pv -s 6656m -p -t -e -r -B 512k > "/dev/${HDD}"
+    gzip -d -c "${USBMOUNT}/${DISKIMG}.gz" | pv -s 6656m -p -t -e -r -B 512k > "/dev/${HDD}"
     testret $? "${ERROR_DECOMPRESS}"
 
     sync
