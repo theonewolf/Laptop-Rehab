@@ -173,6 +173,6 @@ resizepart
 
 echo "${GREEN}Finished installing OS.${NORMAL}"
 
-echo "${RED}Press ANY KEY to SHUTDOWN.${NORMAL}"
+echo "${RED}Press ENTER to SHUTDOWN.${NORMAL}"
 read junk
 poweroff
