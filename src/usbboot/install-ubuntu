@@ -92,8 +92,8 @@ testsmart() {
 }
 
 usbmount() {
-    USBDEVICE="$(blkid -L 'CMU Laptop Rehab 32-bit' | grep 's[d|r][^0-9]*' -o)"
-    USBPART="$(blkid -L 'CMU Laptop Rehab 32-bit')"
+    USBDEVICE="$(blkid -c /dev/null -L 'CMU Laptop Rehab' | grep 's[d|r][^0-9]*' -o)"
+    USBPART="$(blkid -c /dev/null -L 'CMU Laptop Rehab')"
     echo "${WHITE}Found root partition at: ${BLUE}${USBPART}.${WHITE}${NORMAL}"
 
     if [ ! -e /mnt/$(basename ${USBPART}) ]; then
