@@ -39,7 +39,7 @@ core.gz: core-unpacked
 
 LaptopRehabInstaller-2014.iso: core.gz core-mount core-unpacked
 	rsync -avxz core-mount/ /tmp/core-mount/
-	sudo mkisofs -r -V "CMU Laptop Rehab" \
+	sudo mkisofs -r -V "CMU-Laptop-Rehab" \
 		-cache-inodes \
 		-J -l -b boot/isolinux/isolinux.bin \
 		-c boot/isolinux/boot.cat -no-emul-boot \
