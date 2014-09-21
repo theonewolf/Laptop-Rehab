@@ -44,6 +44,7 @@ ERROR_SYNC="Failed sync'ing to HDD."
 ERROR_PARTX="Could not re-read and update partition table."
 ERROR_FSCK="Failed file system check."
 ERROR_RESIZE="Failed file system resize."
+ERROR_UDEV="Failed waiting for udev queue to clear."
 
 error() {
     message="$1"
@@ -163,6 +164,13 @@ waitfstab() {
     fi
 }
 
+waitudev() {
+    echo "${WHITE}Waiting for udev events to finish.${NORMAL}"
+    udevadm settle --quiet
+    testret $? "${ERROR_UDEV}"
+}
+
+waitudev
 waitfstab
 parseopt
 clear
