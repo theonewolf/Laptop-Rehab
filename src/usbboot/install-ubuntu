@@ -69,13 +69,17 @@ parseopt() {
 }
 
 testcpu() {
-    CPU64="$(grep -c 'flags.*\blm\b.*' /proc/cpuinfo)"    
+    CPU64="$(lscpu | grep -c 'CPU op-mode.*64-bit.*')"    
     
     if [ $CPU64 -eq 1 ]; then
         echo "${WHITE}Detected ${BLUE}64-bit CPU${WHITE}.${NORMAL}"
         DISKIMG="Ubuntu64.img"
-    else
+    elif [ $CPU64 -eq 0 ]; then
         echo "${WHITE}Detected ${BLUE}32-bit CPU${WHITE}.${NORMAL}"
+        DISKIMG="Ubuntu32.img"
+    else
+        echo "${RED}Unable to detect CPU type properly!${NORMAL}"
+        echo "${WHITE}Defaulting to ${BLUE}32-bit CPU${WHITE}.${NORMAL}"
         DISKIMG="Ubuntu32.img"
     fi
 }
